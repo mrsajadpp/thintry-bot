@@ -1,0 +1,25 @@
+{
+  "name": "kittu",
+  "version": "1.0.0",
+  "description": "screenshot bot",
+  "main": "index.js",
+  "scripts": {
+    "start": "nodemon index.js"
+  },
+  "keywords": [
+    "kittu"
+  ],
+  "author": "sajad pp",
+  "license": "ISC",
+  "dependencies": {
+    "discord.js": "^13.8.1",
+    "express": "^4.18.1",
+    "fs": "^0.0.1-security",
+    "mongoose": "^6.4.0",
+    "nodemon": "^2.0.18",
+    "path": "^0.12.7",
+    "razorpay": "^2.8.1",
+    "request": "^2.88.2",
+    "screenshotmachine": "^2.0.0"
+  }
+}
