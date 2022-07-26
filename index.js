@@ -31,9 +31,7 @@ client.on('messageCreate', message => {
     const args = message.content.slice(prefix.length).trim().split(/ +/g);
     const commandName = args.shift();
     const command = client.commands.get(commandName);
-    if (!command) { 
-      message.reply({ content: "That command doesn't exist!"});
-    } else if (message.content.startsWith(prefix+'send')) {
+    if(!command) return message.reply({ content: "That command doesn't exist!"});/* else if (message.content.startsWith(prefix+'send')) {
       for (var l = 0; l < data.length; l++) {
          var mes = message.content.split('/send ')[1];
          var chl = message.guild.channels.cache.get(data[l].channel);
@@ -50,7 +48,7 @@ client.on('messageCreate', message => {
         ch.send('Succesfully added this channel');
       }
      }
-    }
+    }*/
     command.run(client, message, args, data);
   }
 });
