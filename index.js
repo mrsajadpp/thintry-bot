@@ -26,10 +26,10 @@ client.on('messageCreate', message => {
   client.user.setActivity("/help", {
         type: "WATCHING"
   });
-  function sendAlert() {
+  function sendAlert(typed) {
     if (message.content) {
       for (var l = 0; l < data.length; l++) {
-         var mes = message.content.split('/send ')[1];
+         var mes = typed.split('/send ')[1];
          var chl = message.guild.channels.cache.get(data[l].channel);
          chl.send(`@everyone New announcement from developer's : ${mes}`);
       }
