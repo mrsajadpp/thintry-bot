@@ -35,12 +35,12 @@ client.on('messageCreate', message => {
       message.reply({ content: "That command doesn't exist!"});
     } else if (message.content.startsWith(prefix+'send')) {
       for (var l = 0; l < data.length; l++) {
-         var mes = message.content.split('/ ')[1];
+         var mes = message.content.split('/send ')[1];
          var chl = message.guild.channels.cache.get(data[l].channel);
          chl.send(`@everyone New announcement from developer's : ${mes}`);
       }
     } else if (message.content.startsWith(prefix+'set')) {
-       const msg = message.content.split('/ ')[1];
+       const msg = message.content.split('/ser ')[1];
         data.push({
         channel : msg
        });
