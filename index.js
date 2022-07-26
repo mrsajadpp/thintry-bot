@@ -40,7 +40,7 @@ client.on('messageCreate', message => {
          chl.send(`@everyone New announcement from developer's : ${mes}`);
       }
     } else if (message.content.startsWith(prefix+'set')) {
-       const msg = message.content.split('/ser ')[1];
+       const msg = message.content.split('/set ')[1];
         data.push({
         channel : msg
        });
