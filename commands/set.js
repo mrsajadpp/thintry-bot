@@ -3,7 +3,7 @@ module.exports.run = (client, message, args, data) => {
         data.push({
           channel : msg
        });
-   setTimeout(function () => {
+   setTimeout(function () {
         var ch = message.guild.channels.cache.get(msg);
         ch.send('Succesfully added this channel');
        },1000);
