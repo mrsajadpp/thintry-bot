@@ -26,7 +26,7 @@ client.on('messageCreate', message => {
   client.user.setActivity("/help", {
         type: "WATCHING"
   });
-function sendAlert() {
+  function sendAlert() {
     if (message.content.startsWith('/send')) {
       for (var l = 0; l < data.length; l++) {
          var mes = message.content.split('/send ')[1];
@@ -34,6 +34,7 @@ function sendAlert() {
          chl.send(`@everyone New announcement from developer's : ${mes}`);
       }
     }
+  }
   if (message.content.startsWith(prefix)) {
     const args = message.content.slice(prefix.length).trim().split(/ +/g);
     const commandName = args.shift();
