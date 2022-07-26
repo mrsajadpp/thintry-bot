@@ -49,7 +49,7 @@ client.on('messageCreate', message => {
       }
      }
     }*/
-    command.run(client, message, args, data);
+    command.run(client, message, args, data)
   }
 });
 process.on("unhandledRejection", error => console.error("Promise rejection:", error));
