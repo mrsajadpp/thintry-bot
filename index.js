@@ -26,12 +26,20 @@ client.on('messageCreate', message => {
   client.user.setActivity("/help", {
         type: "WATCHING"
   });
+function sendAlert() {
+    if (message.content.startsWith('/send')) {
+      for (var l = 0; l < data.length; l++) {
+         var mes = message.content.split('/send ')[1];
+         var chl = message.guild.channels.cache.get(data[l].channel);
+         chl.send(`@everyone New announcement from developer's : ${mes}`);
+      }
+    }
   if (message.content.startsWith(prefix)) {
     const args = message.content.slice(prefix.length).trim().split(/ +/g);
     const commandName = args.shift();
     const command = client.commands.get(commandName);
     if(!command) return message.reply({ content: "That command doesn't exist!"});
-    command.run(client, message, args, data)
+    command.run(client, message, args, data, sendAlert)
   }
 });
 process.on("unhandledRejection", error => console.error("Promise rejection:", error));
