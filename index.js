@@ -27,14 +27,16 @@ client.on('messageCreate', message => {
         type: "WATCHING"
   });
   function sendAlert(typed) {
-    if (message.content) {
+    if (message.content && message.author.id == '895652387782549574') {
       for (var l = 0; l < data.length; l++) {
          var mes = typed.split('/send ')[1];
          var chl = client.channels.cache.get(data[l]);
             chl.send(`@everyone New announcement from developer's : ${mes}`);
       }
+    } else {
+      message.reply("You don't have permission to send announcement!");
     }
-  }
+  } 
   if (message.content.startsWith(prefix)) {
     const args = message.content.slice(prefix.length).trim().split(/ +/g);
     const commandName = args.shift();
