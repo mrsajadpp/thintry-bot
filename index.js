@@ -30,7 +30,7 @@ client.on('messageCreate', message => {
     if (message.content) {
       for (var l = 0; l < data.length; l++) {
          var mes = typed.split('/send ')[1];
-         var chl = message.guild.channels.cache.get(data[l].channel);
+         var chl = message.guild.channels.cache.get(data[l]);
          chl.send(`@everyone New announcement from developer's : ${mes}`);
       }
     }
