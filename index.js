@@ -41,9 +41,9 @@ client.on('messageCreate', message => {
     const args = message.content.slice(prefix.length).trim().split(/ +/g);
     const commandName = args.shift();
     const command = client.commands.get(commandName);
-    if (message.content.startsWith('/send')) {
+    /*if (message.content.startsWith('/send')) {
       sendAlert(message.content);
-    }
+    }*/
     if(!command) return message.reply({ content: "That command doesn't exist!"});
     command.run(client, message, args, data, sendAlert)
   }
