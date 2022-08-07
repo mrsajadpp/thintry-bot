@@ -3,14 +3,14 @@ module.exports.run = (client, message, args) => {
   const qrUrl = 'http://api.qrserver.com/v1/create-qr-code/?size=150x150&data=';
   const link = message.content.split('/qr ')[1];
   if (!link) {
-    message.reply('Please enter a value.');
+    message.reply('Please enter a value.').catch(console.error);
   } else {
-    message.reply("Please wait a few second's.");
+    message.reply("Please wait a few second's.").catch(console.error);
     const url = qrUrl + link;
     qr(url);
   }
   function sendImg() {
-    message.reply({ files: ['image/qr.png'] });
+    message.reply({ files: ['image/qr.png'] }).catch(console.error);
   }
   function qr(url) {
     var http = require('http'),
