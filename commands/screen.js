@@ -4,15 +4,15 @@ module.exports.run = (client, message, args) => {
   const fs = require('fs');
   const url = message.content.split('/screen ')[1];
 if (!url) {
-  message.reply('Your typed null value, Please enter a valid value.');
+  message.reply('Your typed null value, Please enter a valid value.').catch(console.error);
 } else {
-  message.reply("Please wait a few second's.");
+  message.reply("Please wait a few second's.").catch(console.error);
   setTimeout(function() {
     save();
   }, 100);
 }
 function sendImg(){
-  message.reply({ files: ['image/screenshot.png'] });
+  message.reply({ files: ['image/screenshot.png'] }).catch(console.error);
 }
 function save() {
   var screenshotmachine = require('screenshotmachine'); 
