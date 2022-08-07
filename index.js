@@ -34,7 +34,7 @@ client.on('messageCreate', message => {
             chl.send(`@everyone New announcement from developer's : ${mes}`);
       }
     } else {
-      message.reply("You don't have permission to send announcement!");
+      message.reply("You don't have permission to send announcement!").catch(console.error);
     }
   } 
   if (message.content.startsWith(prefix)) {
