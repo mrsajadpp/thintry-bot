@@ -1,7 +1,7 @@
 module.exports.run = (client, message, args) => {
-  var discord = require('discord.js');
+  /*var discord = require('discord.js');
   const http = require('http');
-  const fs = require('fs');
+  const fs = require('fs');*/
   const url = message.content.split('/screen ')[1];
 if (!url) {
   message.reply('Your typed null value, Please enter a valid value.').catch(console.error);
@@ -15,7 +15,7 @@ function sendImg(){
   message.reply({ files: ['image/screenshot.png'] }).catch(console.error);
 }
 function save() {
-  var screenshotmachine = require('screenshotmachine'); 
+  /*var screenshotmachine = require('screenshotmachine'); 
 
 var customerKey = '4516f8';
     secretPhrase = 'crawler'; //leave secret phrase empty, if not needed
@@ -43,5 +43,5 @@ screenshotmachine.readScreenshot(apiUrl).pipe(fs.createWriteStream(output).on('c
     sendImg();
   }, 1000);
 }));
-}
+}*/
 }
