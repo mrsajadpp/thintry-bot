@@ -1,7 +1,8 @@
-module.exports.run = (client, message, args, data, sendAlert, take_screenshot) => {
+module.exports.run = (client, message, args) => {
   /*var discord = require('discord.js');
   const http = require('http');
   const fs = require('fs');*/
+  let take_screenshot = required('./module/screenshot.js');
   const url = message.content.split('/screen ')[1];
 if (!url) {
   message.reply('Your typed null value, Please enter a valid value.').catch(console.error);
@@ -18,7 +19,7 @@ function save() {
   take_screenshot(url, "images/screenshot.png");
   setTimeout(function() {
     sendImg();
-  }, 3000);
+  }, 6000);
   /*var screenshotmachine = require('screenshotmachine'); 
 
 var customerKey = '4516f8';
