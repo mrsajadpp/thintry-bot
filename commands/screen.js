@@ -17,9 +17,9 @@ function sendImg(){
 }
 function save() {
   if (url.startsWith('http')) {
-    take_screenshot(url, "../images/screenshot.png");
+    take_screenshot(url, "images/screenshot.png");
   } else {
-    take_screenshot('http://'+url, "../images/screenshot.png");
+    take_screenshot('http://'+url, "images/screenshot.png");
   }
   setTimeout(function() {
     sendImg();
