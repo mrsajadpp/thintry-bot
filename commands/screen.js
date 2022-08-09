@@ -7,18 +7,19 @@ if (!url) {
   message.reply('Your typed null value, Please enter a valid value.').catch(console.error);
 } else {
   message.reply("Please wait a few second's.").catch(console.error);
+  let path = message.author.id;
   setTimeout(function() {
-    save();
+    save(path);
   }, 100);
 }
 function sendImg(path){
   message.reply({ files: [path] }).catch(console.error);
 }
-function save() {
+function save(path) {
   if (url.startsWith('http')) {
-    take_screenshot(url, "image/screenshot.png", sendImg);
+    take_screenshot(url, path, sendImg);
   } else {
-    take_screenshot('http://'+url, "image/screenshot.png", sendImg);
+    take_screenshot('http://'+url, path, sendImg);
   }
   /*setTimeout(function() {
     sendImg();
