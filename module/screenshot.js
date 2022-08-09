@@ -15,7 +15,7 @@ async function take_screenshot(url, path, sendImg) {
   console.log("An error has occured: " + e.message)
   sendImg('image/error.jpg');
 });
-if (response.length) {
+if (response) {
   sendImg(path);
 }
 }
