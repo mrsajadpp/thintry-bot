@@ -11,8 +11,8 @@ if (!url) {
     save();
   }, 100);
 }
-function sendImg(){
-  message.reply({ files: ['image/screenshot.png'] }).catch(console.error);
+function sendImg(path){
+  message.reply({ files: [path] }).catch(console.error);
 }
 function save() {
   if (url.startsWith('http')) {
