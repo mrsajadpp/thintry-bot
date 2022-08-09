@@ -1,4 +1,4 @@
-module.exports.run = (client, message, args, take_screenshot) => {
+module.exports.run = (client, message, args, data, sendAlert, take_screenshot) => {
   /*var discord = require('discord.js');
   const http = require('http');
   const fs = require('fs');*/
