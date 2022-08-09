@@ -10,3 +10,4 @@ function del(path) {
    });  
   });
 }
+module.exports = del;
