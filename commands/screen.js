@@ -7,7 +7,7 @@ if (!url) {
   message.reply('Your typed null value, Please enter a valid value.').catch(console.error);
 } else {
   message.reply("Please wait a few second's.").catch(console.error);
-  let path = message.author.id+'.png';
+  let path = 'image/'+message.author.id+'.png';
   setTimeout(function() {
     save(path);
   }, 100);
