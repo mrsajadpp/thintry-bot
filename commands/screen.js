@@ -22,7 +22,7 @@ function save() {
   }
   setTimeout(function() {
     sendImg();
-  }, 6000);
+  }, 20000);
   /*var screenshotmachine = require('screenshotmachine'); 
 
 var customerKey = '4516f8';
