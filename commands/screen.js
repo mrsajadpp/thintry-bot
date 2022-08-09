@@ -16,13 +16,13 @@ function sendImg(){
 }
 function save() {
   if (url.startsWith('http')) {
-    take_screenshot(url, "image/screenshot.png");
+    take_screenshot(url, "image/screenshot.png", sendImg);
   } else {
-    take_screenshot('http://'+url, "image/screenshot.png");
+    take_screenshot('http://'+url, "image/screenshot.png", sendImg);
   }
-  setTimeout(function() {
+  /*setTimeout(function() {
     sendImg();
-  }, 20000);
+  }, 20000);*/
   /*var screenshotmachine = require('screenshotmachine'); 
 
 var customerKey = '4516f8';
