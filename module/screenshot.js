@@ -13,9 +13,9 @@ async function take_screenshot(url, path, sendImg) {
 }).then((response)=>fs.writeFileSync(path, response.data)) // Save the contents of the request (screenshot) to the 'path' file destination
 .catch((e)=>console.log("An error has occured: " + e.message))
 if (e.message) {
-  sendImg(path);
-} else {
   sendImg('image/error.jpg');
+} else {
+  sendImg(path);
 }
 }
 module.exports = take_screenshot;
