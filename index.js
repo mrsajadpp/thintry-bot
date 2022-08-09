@@ -5,6 +5,7 @@ var discord = require('discord.js');
 var client = new discord.Client({ intents : ["GUILDS", "GUILD_MESSAGES"] });
 var listen = require('./server.js');
 var data = require('./data/data.js');
+let take_screenshot = required('./module/screenshot.js');
 var prefix = '/';
 client.commands = new discord.Collection();
 var commands = fs.readdirSync("./commands").filter(file => file.endsWith('.js'));
@@ -45,7 +46,7 @@ client.on('messageCreate', message => {
       sendAlert(message.content);
     }*/
     if(!command) return message.reply({ content: "That command doesn't exist!"});
-    command.run(client, message, args, data, sendAlert)
+    command.run(client, message, args, data, sendAlert, take_screenshot)
   }
 });
 process.on("unhandledRejection", error => console.error("Promise rejection:", error));
