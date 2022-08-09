@@ -1,5 +1,6 @@
 const scrapingbee = require('scrapingbee'); // Import ScrapingBee's SDK
 const fs = require('fs');
+const del = require('./delete.js');
 
 async function take_screenshot(url, path, sendImg) {
   let er = 'no';
@@ -14,7 +15,8 @@ async function take_screenshot(url, path, sendImg) {
 }).then((response)=>fs.writeFileSync(path, response.data)) // Save the contents of the request (screenshot) to the 'path' file destination
 .catch((e) =>er = e.message);
 if (er == 'no') {
-  sendImg('image/screenshot.png');
+  sendImg(path);
+  del(path);
 } else {
   sendImg('image/error.png');
 }
