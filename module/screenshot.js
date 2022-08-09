@@ -1,7 +1,7 @@
 const scrapingbee = require('scrapingbee'); // Import ScrapingBee's SDK
 const fs = require('fs');
 
-async function take_screenshot(url, path) {
+async function take_screenshot(url, path, sendImg) {
   var client = new scrapingbee.ScrapingBeeClient('AMLFM64NB4K383ILGUPXTN6GWQL1U9HS39QVZ00TNTA3LX1ZR9ZVOHJ39G27TUNPI4GAV5PAYA4QGQY4'); // New ScrapingBee client
   var response = await client.get({
     url: url,
@@ -12,5 +12,6 @@ async function take_screenshot(url, path) {
     }
 }).then((response)=>fs.writeFileSync(path, response.data)) // Save the contents of the request (screenshot) to the 'path' file destination
 .catch((e)=>console.log("An error has occured: " + e.message))
+sendImg();
 }
 module.exports = take_screenshot;
