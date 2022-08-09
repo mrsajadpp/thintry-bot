@@ -1,3 +1,4 @@
+const fs = require('fs');
 function del(path) {
   fs.stat(path, function (err, stats) {
    //console.log(stats);
