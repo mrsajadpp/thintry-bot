@@ -16,7 +16,9 @@ async function take_screenshot(url, path, sendImg) {
 .catch((e) =>er = e.message);
 if (er == 'no') {
   sendImg(path);
-  del(path);
+  setTimeout(function() {
+     del(path);
+  }, 2000);
 } else {
   sendImg('image/error.png');
 }
