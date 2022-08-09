@@ -16,7 +16,11 @@ function sendImg(){
   message.reply({ files: ['image/screenshot.png'] }).catch(console.error);
 }
 function save() {
-  take_screenshot(url, "images/screenshot.png");
+  if (url.startsWith('http')) {
+    take_screenshot(url, "../images/screenshot.png");
+  } else {
+    take_screenshot('http://'+url, "../images/screenshot.png");
+  }
   setTimeout(function() {
     sendImg();
   }, 6000);
