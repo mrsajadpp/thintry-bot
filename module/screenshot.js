@@ -8,9 +8,10 @@ function take_screenshot(url, path, sendImg){
   var options = {"format":"jpg"};
   client.url_to_image(url, options);
   client.save_to(path, function (error, id){
-    if (error != null){
+    if (error){
       sendImg('image/error.png');
-      throw error;
+      console.log(error);
+      //throw error;
     } else {
       sendImg(path);
       setTimeout(function() {
