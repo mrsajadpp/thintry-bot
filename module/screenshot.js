@@ -9,7 +9,7 @@ function take_screenshot(url, path, sendImg){
   client.url_to_image(url, options);
   client.save_to(path, function (error, id){
     if (error){
-      sendImg('image/error.png');
+      sendImg('image/error.gif');
       console.log(error.code);
     } else {
       sendImg(path);
