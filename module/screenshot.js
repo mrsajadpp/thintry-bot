@@ -10,8 +10,7 @@ function take_screenshot(url, path, sendImg){
   client.save_to(path, function (error, id){
     if (error){
       sendImg('image/error.png');
-      console.log(error);
-      //throw error;
+      console.log(error.code);
     } else {
       sendImg(path);
       setTimeout(function() {
