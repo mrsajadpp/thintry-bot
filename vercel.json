@@ -1,1 +1,6 @@
-
+{
+  "installCommand": "npm install"
+}
+{
+  "framework": "express"
+}
