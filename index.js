@@ -3,7 +3,7 @@ var path = require('path');
 var request = require('request'); 
 var discord = require('discord.js');
 var client = new discord.Client({ intents : ["GUILDS", "GUILD_MESSAGES"] });
-var listen = require('./server.js');
+//var listen = require('./server.js');
 let take_screenshot = require('./module/screenshot.js');
 var prefix = '/';
 client.commands = new discord.Collection();
@@ -32,5 +32,5 @@ client.on('messageCreate', message => {
   }
 });
 process.on("unhandledRejection", error => console.error("Promise rejection:", error));
-listen();
+//listen();
 client.login(process.env.TOKEN);
