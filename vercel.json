@@ -9,6 +9,10 @@
       {
         "src": "/(.*)",
         "dest": "index.js"
+      },
+      {
+        "src": "index.js",
+        "dest": "@vercel/node"
       }
   ]
 }
