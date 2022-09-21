@@ -4,7 +4,6 @@ var request = require('request');
 var discord = require('discord.js');
 var client = new discord.Client({ intents : ["GUILDS", "GUILD_MESSAGES"] });
 var listen = require('./server.js');
-var data = require('./data/data.js');
 let take_screenshot = require('./module/screenshot.js');
 var prefix = '/';
 client.commands = new discord.Collection();
@@ -24,31 +23,14 @@ client.on('ready', () => {
 
 //Message
 client.on('messageCreate', message => {
-  client.user.setActivity("/help", {
-        type: "WATCHING"
-  });
-  function sendAlert(typed) {
-    if (message.content && message.author.id == '895652387782549574') {
-      for (var l = 0; l < data.length; l++) {
-         var mes = typed.split('/send ')[1];
-         var chl = client.channels.cache.get(data[l]);
-            chl.send(`@everyone New announcement from developer's : ${mes}`);
-      }
-    } else {
-      message.reply("You don't have permission to send announcement!").catch(console.error);
-    }
-  } 
   if (message.content.startsWith(prefix)) {
     const args = message.content.slice(prefix.length).trim().split(/ +/g);
     const commandName = args.shift();
     const command = client.commands.get(commandName);
-    /*if (message.content.startsWith('/send')) {
-      sendAlert(message.content);
-    }*/
     if(!command) return message.reply({ content: "That command doesn't exist!"});
-    command.run(client, message, args, data, sendAlert, take_screenshot)
+    command.run(client, message, args, take_screenshot)
   }
 });
 process.on("unhandledRejection", error => console.error("Promise rejection:", error));
 listen();
-client.login(process.env.TOKEN);
+client.login("OTc2MzQxMDI3MzY1NDY2MTEy.Gqd9rf.t014It3wZUV6dDBPWRUcIDOj8drzRVtMbvIiBg");

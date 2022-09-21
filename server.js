@@ -2,7 +2,7 @@ var express = require('express');
 var app = express();
 var path = require('path');
 var router = express.Router();
-var port = process.env.port || 3008;
+var port = process.env.port || 3000;
 //Web server 
 function listen(){
    app.listen(port, () => {

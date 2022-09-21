@@ -6,7 +6,7 @@ module.exports.run = (client, message, args) => {
         { name: 'Prefix', value: '[ /] is the prefix.' }, 
         { name: 'Screenshot', value: '[/screen <website url>] to get your link(website) screenshot.' },
         { name: 'Generate qr code', value: '[/qr <url or value>] type this and send generate your own qr code.' },
-        { name: 'Report bug', value: '[/report <bug>] and send your server.' }, 
+        { name: 'Report bug', value: '[/rp <bug>] and send your server.' }, 
         { name: "Server information", value: "[/info] send your server see information's." },
         { name: 'Donate', value: '[/donate] to donate help developer.' },
         { name: 'Costomise qr code', value: '[/donacode] take crawler bot premium.' },
