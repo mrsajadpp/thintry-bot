@@ -20,7 +20,6 @@ client.on('ready', () => {
         type: "WATCHING"
   });
 });
-
 //Message
 client.on('messageCreate', message => {
   if (message.content.startsWith(prefix)) {
