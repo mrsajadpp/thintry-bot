@@ -5,7 +5,7 @@ var discord = require('discord.js');
 var client = new discord.Client({ intents : ["GUILDS", "GUILD_MESSAGES"] });
 //var listen = require('./server.js');
 let take_screenshot = require('./module/screenshot.js');
-var prefix = '/';
+var prefix = ':';
 client.commands = new discord.Collection();
 var commands = fs.readdirSync("./commands").filter(file => file.endsWith('.js'));
 for(file of commands){
