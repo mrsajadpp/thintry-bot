@@ -32,4 +32,4 @@ client.on('messageCreate', message => {
 });
 process.on("unhandledRejection", error => console.error("Promise rejection:", error));
 //listen();
-client.login(process.env.TOKEN);
+client.login("OTc2MzQxMDI3MzY1NDY2MTEy.GTvfma.NDLwZo2j0AXRmwacpQAK4yls1T6HaI6NC8WKIk");
