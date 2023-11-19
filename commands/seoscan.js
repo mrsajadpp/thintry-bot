@@ -15,6 +15,19 @@ module.exports = {
   async execute(interaction) {
     const websiteURL = interaction.options.getString('website');
 
+    // Check if the URL starts with either http:// or https://
+    if (!websiteURL.startsWith('http://') && !websiteURL.startsWith('https://')) {
+      // If it doesn't, assume http:// and append it to the URL
+      const formattedURL = `https://${websiteURL}`;
+      try {
+        new URL(formattedURL);
+        websiteURL = formattedURL; // Update the URL to the corrected version
+      } catch (error) {
+        await interaction.reply('Please provide a valid URL.');
+        return;
+      }
+    }
+
     if (!websiteURL) {
       await interaction.reply('Please provide a website URL.');
       return;

@@ -20,6 +20,19 @@ module.exports = {
       return;
     }
 
+    // Check if the URL starts with either http:// or https://
+    if (!url.startsWith('http://') && !url.startsWith('https://')) {
+      // If it doesn't, assume http:// and append it to the URL
+      const formattedURL = `https://${url}`;
+      try {
+        new URL(formattedURL);
+        url = formattedURL; // Update the URL to the corrected version
+      } catch (error) {
+        await interaction.reply('Please provide a valid URL.');
+        return;
+      }
+    }
+
     await interaction.deferReply(); // Acknowledge that the bot has received the interaction
 
     try {
