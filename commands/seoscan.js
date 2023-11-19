@@ -14,7 +14,7 @@ module.exports = {
     ),
 
   async execute(interaction) {
-    const websiteURL = interaction.options.getString('website');
+    let websiteURL = interaction.options.getString('website');
 
     // Check if the URL starts with either http:// or https://
     if (!websiteURL.startsWith('http://') && !websiteURL.startsWith('https://')) {

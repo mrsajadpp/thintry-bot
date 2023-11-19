@@ -14,7 +14,7 @@ module.exports = {
     ),
 
   async execute(interaction) {
-    const url = interaction.options.getString('url');
+    let url = interaction.options.getString('url');
 
     if (!url) {
       await interaction.reply('Please provide a valid URL.');

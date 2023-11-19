@@ -5,7 +5,7 @@ var URL = require('url').URL;
 
 module.exports = {
   async execute(interaction) {
-    const websiteURL = interaction.options.getString('website');
+    let websiteURL = interaction.options.getString('website');
 
     if (!websiteURL) {
       await interaction.reply('Please provide a website URL.');
