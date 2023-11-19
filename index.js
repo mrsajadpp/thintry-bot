@@ -1,3 +1,4 @@
+require("dotenv").config();
 const fs = require('fs');
 const { REST } = require('@discordjs/rest');
 const { Routes } = require('discord-api-types/v9');
@@ -31,11 +32,11 @@ client.once('ready', async () => {
 
   try {
     console.log('Started refreshing application (/) commands.');
-    const rest = new REST({ version: '9' }).setToken("MTAzMzM4MjQ2NzQ0NjUxNzc4MA.Gf2JdB.RSxqSFJ-7WtrgmGWA5dLaQ0cWLf9VZUxmUbv8I");
+    const rest = new REST({ version: '9' }).setToken(process.env.TOKEN);
 
     for (const id of guildIds) {
       await rest.put(
-        Routes.applicationGuildCommands("1033382467446517780", id), // Replace YOUR_CLIENT_ID with your bot's client ID
+        Routes.applicationGuildCommands(client.user.id, id), // Replace YOUR_CLIENT_ID with your bot's client ID
         { body: commands },
       );
     }
@@ -45,6 +46,20 @@ client.once('ready', async () => {
     console.error('Error registering application (/) commands:', error);
   }
 });
+
+client.on('guildCreate', async guild => {
+  try {
+    const rest = new REST({ version: '9' }).setToken(process.env.TOKEN);
+
+    await rest.put(
+      Routes.applicationGuildCommands(client.user.id, guild.id), // Replace YOUR_CLIENT_ID with your bot's client ID
+      { body: commands },
+    );
+  } catch (error) {
+    console.error('Error registering application (/) commands in new guild:', error);
+  }
+});
+
 
 client.on('interactionCreate', async interaction => {
   if (!interaction.isCommand()) return;
@@ -63,4 +78,4 @@ client.on('interactionCreate', async interaction => {
 
 process.on("unhandledRejection", error => console.error("Promise rejection:", error));
 
-client.login("MTAzMzM4MjQ2NzQ0NjUxNzc4MA.Gf2JdB.RSxqSFJ-7WtrgmGWA5dLaQ0cWLf9VZUxmUbv8I"); // Replace YOUR_BOT_TOKEN with your bot's token
+client.login(process.env.TOKEN); // Replace YOUR_BOT_TOKEN with your bot's token

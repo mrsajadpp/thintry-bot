@@ -1,7 +1,7 @@
 const { SlashCommandBuilder } = require('@discordjs/builders');
 const axios = require('axios');
 
-const TOMORROW_IO_API_KEY = '7SEzRUj7qGcMaMhRpL0p9SA5jsK8i222';
+// const TOMORROW = '7SEzRUj7qGcMaMhRpL0p9SA5jsK8i222';
 
 module.exports = {
   async execute(interaction) {
@@ -13,7 +13,7 @@ module.exports = {
     }
 
     try {
-      const weatherData = await axios.get(`https://api.tomorrow.io/v4/timelines?location=${location}&fields=temperature&units=metric&timesteps=current&apikey=${TOMORROW_IO_API_KEY}`);
+      const weatherData = await axios.get(`https://api.tomorrow.io/v4/timelines?location=${location}&fields=temperature&units=metric&timesteps=current&apikey=${process.env.WEATHER_API}`);
 
       // Extract weather information from the response data
       const temperature = weatherData.data.data.timelines[0].intervals[0].values.temperature;
