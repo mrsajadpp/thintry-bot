@@ -1,6 +1,7 @@
 const { SlashCommandBuilder } = require('@discordjs/builders');
 const { MessageEmbed } = require('discord.js');
 const puppeteer = require('puppeteer');
+var URL = require('url').URL;
 
 module.exports = {
   async execute(interaction) {

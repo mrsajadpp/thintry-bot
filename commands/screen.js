@@ -1,6 +1,7 @@
 const { SlashCommandBuilder } = require('@discordjs/builders');
 const puppeteer = require('puppeteer');
 const { MessageAttachment } = require('discord.js');
+var URL = require('url').URL;
 
 module.exports = {
   data: new SlashCommandBuilder()
