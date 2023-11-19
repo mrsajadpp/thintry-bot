@@ -4,7 +4,7 @@
   "description": "Discord bot - Crawler",
   "main": "index.js",
   "scripts": {
-    "start": "node index.js"
+    "start": "nodemon index.js"
   },
   "keywords": [
     "Crawler"
@@ -12,16 +12,28 @@
   "author": "sajad pp",
   "license": "ISC",
   "dependencies": {
-    "discord.js": "^13.8.1",
+    "@discordjs/builders": "^1.7.0",
+    "@discordjs/rest": "^2.2.0",
+    "@mozilla/readability": "^0.4.4",
+    "axios": "^1.6.2",
+    "discord.js": "^13.17.1",
     "express": "^4.18.1",
     "fs": "^0.0.1-security",
+    "google-translate-api": "^2.3.0",
     "grabzit": "^3.5.2",
+    "is-website-vulnerable": "^1.14.8",
+    "jsdom": "^22.1.0",
     "mongoose": "^6.4.0",
-    "nodemon": "^2.0.20",
+    "node-vibrant": "^3.2.1-alpha.1",
+    "nodemailer": "^6.9.7",
+    "nodemon": "^2.0.22",
     "path": "^0.12.7",
+    "puppeteer": "^21.5.2",
     "razorpay": "^2.8.1",
     "request": "^2.88.2",
     "scrapingbee": "^1.6.1",
-    "screenshotmachine": "^2.0.0"
+    "screenshotmachine": "^2.0.0",
+    "security-headers": "^0.2.1",
+    "web-vitals": "^3.5.0"
   }
 }

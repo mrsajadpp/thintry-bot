@@ -1,36 +1,40 @@
-module.exports.run = async (client, message, args) => {
-  const fs = require('fs');
-  const qrUrl = 'http://api.qrserver.com/v1/create-qr-code/?size=150x150&data=';
-  const del = require('../module/delete.js');
-  const link = message.content.split('/qr ')[1];
-  if (!link) {
-    await message.reply('Please enter a value.').catch(console.error);
-  } else {
-    await message.reply("Please wait a few second's.").catch(console.error);
-    const url = qrUrl + link;
-    await qr(url);
-  }
-  async function sendImg() {
-    await message.reply({ files: ['image/'+message.author.id+'.png'] }).catch(console.error);
-  }
-  async function qr(url) {
-    var http = require('http'),
-    Stream = require('stream').Transform,
-    fs = require('fs');
-    http.request(url, function(response) {
-    var data = new Stream();
-    response.on('data', function(chunk) {
-       data.push(chunk);
-    });
-    response.on('end', function() {
-       fs.writeFileSync('image/'+message.author.id+'.png', data.read());
-       setTimeout(async function() {
-         await sendImg();
-         setTimeout(async function() {
-            await del('image/'+message.author.id+'.png');
-         }, 2000);
-       }, 1000);
-    });
-    }).end();
-  }
-}
+const { SlashCommandBuilder } = require('@discordjs/builders');
+const fetch = require('node-fetch');
+const { MessageAttachment } = require('discord.js');
+
+module.exports = {
+  data: new SlashCommandBuilder()
+    .setName('qr')
+    .setDescription('Generate a QR code for a URL')
+    .addStringOption(option =>
+      option.setName('query')
+        .setDescription('Enter a URL or Query')
+        .setRequired(true)
+    ),
+
+  async execute(interaction) {
+    const link = interaction.options.getString('query');
+
+    if (!link) {
+      await interaction.reply('Please enter a value.');
+      return;
+    }
+
+    await interaction.deferReply(); // Acknowledge that the bot has received the interaction
+
+    const qrUrl = `http://api.qrserver.com/v1/create-qr-code/?size=1000x1000&data=${encodeURIComponent(link)}`;
+
+    try {
+      const response = await fetch(qrUrl);
+      const arrayBuffer = await response.arrayBuffer();
+      const qrBuffer = await Buffer.from(arrayBuffer);
+
+      const qrAttachment = new MessageAttachment(qrBuffer, 'qr-code.png');
+
+      await interaction.editReply({ files: [qrAttachment] });
+    } catch (error) {
+      console.error('Error fetching QR code:', error);
+      await interaction.editReply('There was an error while generating the QR code.');
+    }
+  },
+};
