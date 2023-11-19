@@ -23,7 +23,9 @@ module.exports = {
     await interaction.deferReply(); // Acknowledge that the bot has received the interaction
 
     try {
-      const browser = await puppeteer.launch();
+      const browser = await puppeteer.launch({
+        executablePath: '/usr/bin/google-chrome', // Replace with your Chrome executable path
+      });
       const page = await browser.newPage();
 
       await page.setViewport({ width: 1920, height: 1080 });
