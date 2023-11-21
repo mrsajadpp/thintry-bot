@@ -3,7 +3,7 @@ const { MessageEmbed } = require('discord.js');
 
 module.exports = {
   async execute(interaction, db) {
-    const reportChannelOption = interaction.options.getChannel('reportchannel');
+    const reportChannelOption = interaction.options.getChannel('channel');
 
     // Check if the user is an administrator
     if (interaction.member.permissions.has('ADMINISTRATOR')) {
