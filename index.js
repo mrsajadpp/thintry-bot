@@ -3,12 +3,19 @@ const fs = require('fs');
 const { REST } = require('@discordjs/rest');
 const { Routes } = require('discord-api-types/v9');
 const { Client, Intents, Collection } = require('discord.js'); // Include Collection from discord.js
+const { connectToDatabase } = require('./database/db');
 
 const client = new Client({ intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MESSAGES, Intents.FLAGS.DIRECT_MESSAGE_REACTIONS, Intents.FLAGS.GUILD_EMOJIS_AND_STICKERS] });
 client.commands = new Collection(); // Create a new collection for commands
 
 let commands = [];
 let guildIds = []; // Renamed from guild_id for better readability
+
+let db;
+
+(async () => {
+  db = await connectToDatabase('paper');
+})();
 
 const commandFiles = fs.readdirSync("./commands").filter(file => file.endsWith('.js'));
 
@@ -67,14 +74,142 @@ client.on('interactionCreate', async interaction => {
   const command = client.commands.get(interaction.commandName);
 
   if (!command) return;
-
   try {
-    await command.execute(interaction);
+    await command.execute(interaction, db);
   } catch (error) {
     console.error('Error executing command:', error);
     await interaction.reply({ content: 'There was an error while executing this command!', ephemeral: true });
   }
 });
+
+const { MessageEmbed } = require('discord.js');
+
+// Assuming you have a cooldowns Map
+const cooldowns = new Map();
+
+client.on('messageCreate', async (message) => {
+  // Check if the guild has auto-moderation features enabled
+  const guildData = await db.collection('guildSettings').findOne({ guildId: message.guild.id });
+
+  if (guildData) {
+    const isAdmin = message.member.permissions.has('ADMINISTRATOR');
+    const linkFilterEnabled = guildData.linkFilterEnabled;
+    const blacklistWordsEnabled = guildData.blacklistWordsEnabled;
+    const antiSpamEnabled = guildData.antiSpamEnabled;
+    const linkChannelId = guildData.linkChannel; // Assuming you have a 'linkChannel' property in guildSettings
+
+    // Check for link filtering
+    if (linkFilterEnabled && !isAdmin && containsLink(message.content) && linkChannelId !== message.channelId) {
+      try {
+        await message.delete();
+        console.log(`Deleted message from ${message.author.tag} in ${message.guild.name} due to link filtering.`);
+
+        // Send a report to the specified channel
+        const reportChannelId = guildData.reportChannelId;
+        if (reportChannelId) {
+          const reportEmbed = new MessageEmbed()
+            .setTitle('Link Filtering Report')
+            .setDescription(`Message deleted from <@${message.author.id}> in ${message.guild.name} for containing an unauthorized link.`)
+            .setColor('RED')
+            .setTimestamp();
+
+          const reportChannel = message.guild.channels.cache.get(reportChannelId);
+          if (reportChannel && reportChannel.isText()) {
+            await reportChannel.send({ embeds: [reportEmbed] });
+          }
+        }
+      } catch (error) {
+        console.error('Error deleting message:', error);
+      }
+    }
+
+    // Check for word filtering
+    if (blacklistWordsEnabled && !isAdmin) {
+      const filteredWords = ['bad', 'inappropriate', 'etc.'];
+
+      for (const word of filteredWords) {
+        if (message.content.toLowerCase().includes(word) && !isAdmin) {
+          // Delete the message if it contains a filtered word
+          try {
+            await message.delete();
+            console.log(`Deleted message from ${message.author.tag} in ${message.guild.name} due to word filtering.`);
+
+            // Send a report to the specified channel
+            const reportChannelId = guildData.reportChannelId;
+            if (reportChannelId) {
+              const reportEmbed = new MessageEmbed()
+                .setTitle('Blacklist Words Report')
+                .setDescription(`Message deleted from <@${message.author.id}> in ${message.guild.name} for containing the word: ${word}`)
+                .setColor('RED')
+                .setTimestamp();
+
+              const reportChannel = message.guild.channels.cache.get(reportChannelId);
+              if (reportChannel && reportChannel.isText()) {
+                await reportChannel.send({ embeds: [reportEmbed] });
+              }
+            }
+          } catch (error) {
+            console.error('Error deleting message:', error);
+          }
+        }
+      }
+    }
+
+    // Check for spam messages
+    if (antiSpamEnabled && !isAdmin) {
+      const cooldownTime = 5000; // 5 seconds cooldown (adjust as needed)
+      const userCooldownKey = `${message.guild.id}-${message.author.id}`;
+
+      // Fetch user cooldown from the database
+      const userCooldownData = await db.collection('userCooldowns').findOne({ key: userCooldownKey });
+      const userCooldown = userCooldownData ? userCooldownData.timestamp : 0;
+
+      if (Date.now() - userCooldown > cooldownTime) {
+        // Allow the message
+        try {
+          // Update user cooldown in the database
+          await db.collection('userCooldowns').updateOne(
+            { key: userCooldownKey },
+            { $set: { timestamp: Date.now() } },
+            { upsert: true }
+          );
+        } catch (error) {
+          console.error('Error updating user cooldown in the database:', error);
+        }
+      } else {
+        // Delete the spam message
+        try {
+          await message.delete();
+
+          // Send a report to the specified channel
+          const reportChannelId = guildData.reportChannelId;
+          if (reportChannelId) {
+            const reportEmbed = new MessageEmbed()
+              .setTitle('Spam Filtering Report')
+              .setDescription(`Message deleted from <@${message.author.id}> in ${message.guild.name} for spamming.`)
+              .setColor('RED')
+              .setTimestamp();
+
+            const reportChannel = message.guild.channels.cache.get(reportChannelId);
+            if (reportChannel && reportChannel.isText()) {
+              await reportChannel.send({ embeds: [reportEmbed] });
+            }
+          }
+        } catch (error) {
+          console.error('Error deleting spam message:', error);
+        }
+      }
+    }
+  }
+});
+
+
+function containsLink(content) {
+  // Use a regular expression to check if the message contains a URL
+  const urlRegex = /(?:https?:\/\/)?(?:www\.)?[a-zA-Z0-9-]+\.[a-zA-Z]{2,}(?:\/[^\s]*)?/;
+  return urlRegex.test(content);
+}
+
 
 process.on("unhandledRejection", error => console.error("Promise rejection:", error));
 

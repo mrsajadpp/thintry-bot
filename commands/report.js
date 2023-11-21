@@ -3,7 +3,7 @@ const nodemailer = require('nodemailer');
 
 module.exports = {
   data: new SlashCommandBuilder()
-    .setName('rp')
+    .setName('report')
     .setDescription('Report bugs.')
     .addStringOption(option =>
       option.setName('bug')

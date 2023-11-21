@@ -1,6 +1,7 @@
 const { SlashCommandBuilder } = require('@discordjs/builders');
 const puppeteer = require('puppeteer');
 const { MessageAttachment } = require('discord.js');
+const { createCanvas, loadImage } = require('canvas');
 var URL = require('url').URL;
 
 module.exports = {
@@ -47,9 +48,28 @@ module.exports = {
       await page.goto(url);
       const screenshot = await page.screenshot();
 
+      // Load the watermark logo
+      const logo = await loadImage('https://i.postimg.cc/hPrNGx38/PAPERWTR.png'); // Replace with the path to your logo image
+
+      // Create a canvas and draw the screenshot and logo onto it
+      const canvas = createCanvas(1920, 1080);
+      const ctx = canvas.getContext('2d');
+
+      // Draw the screenshot
+      ctx.drawImage(await loadImage(screenshot), 0, 0, 1920, 1080);
+
+      // Draw the logo as a watermark (centered along y-axis, left-aligned along x-axis)
+      const logoX = canvas.width - 700; // Adjust the x-coordinate as needed
+      const logoY = (canvas.height - 60) / 2; // Centered along the y-axis
+
+      ctx.drawImage(logo, logoX, logoY, 150, 60);
+
+      // Convert the canvas to a Buffer
+      const canvasBuffer = canvas.toBuffer('image/png');
+
       await browser.close();
 
-      const attachment = new MessageAttachment(screenshot, 'screenshot.png');
+      const attachment = new MessageAttachment(canvasBuffer, 'screenshot_with_watermark.png');
       await interaction.editReply({ files: [attachment] });
     } catch (error) {
       console.error('Error taking screenshot:', error);
