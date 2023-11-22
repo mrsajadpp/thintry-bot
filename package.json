@@ -32,6 +32,7 @@
     "nodemailer": "^6.9.7",
     "nodemon": "^2.0.22",
     "path": "^0.12.7",
+    "puppeteer": "^21.5.2",
     "razorpay": "^2.8.1",
     "request": "^2.88.2",
     "scrapingbee": "^1.6.1",
