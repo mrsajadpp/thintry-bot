@@ -2,10 +2,10 @@ require("dotenv").config();
 const fs = require('fs');
 const { REST } = require('@discordjs/rest');
 const { Routes } = require('discord-api-types/v9');
-const { Client, Intents, Collection } = require('discord.js'); // Include Collection from discord.js
+const { Client, Intents, Collection, GatewayIntentBits, PermissionsBitField } = require('discord.js'); // Include Collection from discord.js
 const { connectToDatabase } = require('./database/db');
 
-const client = new Client({ intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MESSAGES, Intents.FLAGS.DIRECT_MESSAGE_REACTIONS, Intents.FLAGS.GUILD_EMOJIS_AND_STICKERS] });
+const client = new Client({ intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMessages, GatewayIntentBits.DirectMessages, GatewayIntentBits.MessageContent, GatewayIntentBits.DirectMessageReactions, GatewayIntentBits.GuildEmojisAndStickers] });
 client.commands = new Collection(); // Create a new collection for commands
 
 let commands = [];
@@ -82,7 +82,7 @@ client.on('interactionCreate', async interaction => {
   }
 });
 
-const { MessageEmbed } = require('discord.js');
+const { EmbedBuilder } = require('discord.js');
 
 // Assuming you have a cooldowns Map
 const cooldowns = new Map();
@@ -92,7 +92,8 @@ client.on('messageCreate', async (message) => {
   const guildData = await db.collection('guildSettings').findOne({ guildId: message.guild.id });
 
   if (guildData) {
-    const isAdmin = message.member.permissions.has('ADMINISTRATOR');
+    console.log(guildData);
+    const isAdmin = message.member.permissions.has(PermissionsBitField.StageModerator);
     const linkFilterEnabled = guildData.linkFilterEnabled;
     const blacklistWordsEnabled = guildData.blacklistWordsEnabled;
     const antiSpamEnabled = guildData.antiSpamEnabled;
@@ -107,14 +108,14 @@ client.on('messageCreate', async (message) => {
         // Send a report to the specified channel
         const reportChannelId = guildData.reportChannelId;
         if (reportChannelId) {
-          const reportEmbed = new MessageEmbed()
+          const reportEmbed = new EmbedBuilder()
             .setTitle('Link Filtering Report')
             .setDescription(`Message deleted from <@${message.author.id}> in ${message.guild.name} for containing an unauthorized link.`)
-            .setColor('RED')
+            .setColor('Red')
             .setTimestamp();
 
           const reportChannel = message.guild.channels.cache.get(reportChannelId);
-          if (reportChannel && reportChannel.isText()) {
+          if (reportChannel) {
             await reportChannel.send({ embeds: [reportEmbed] });
           }
         }
@@ -124,33 +125,33 @@ client.on('messageCreate', async (message) => {
     }
 
     // Check for word filtering
-    if (blacklistWordsEnabled && !isAdmin) {
-      const filteredWords = ['bad', 'inappropriate', 'etc.'];
+    if (blacklistWordsEnabled) {
+      var badwordsRegExp = require('badwords/regexp');
 
-      for (const word of filteredWords) {
-        if (message.content.toLowerCase().includes(word) && !isAdmin) {
-          // Delete the message if it contains a filtered word
-          try {
-            await message.delete();
-            console.log(`Deleted message from ${message.author.tag} in ${message.guild.name} due to word filtering.`);
 
-            // Send a report to the specified channel
-            const reportChannelId = guildData.reportChannelId;
-            if (reportChannelId) {
-              const reportEmbed = new MessageEmbed()
-                .setTitle('Blacklist Words Report')
-                .setDescription(`Message deleted from <@${message.author.id}> in ${message.guild.name} for containing the word: ${word}`)
-                .setColor('RED')
-                .setTimestamp();
+      if (message.content.toLowerCase().match(badwordsRegExp)) {
+        // Delete the message if it contains a filtered word
+        try {
+          const word = message.content.toLowerCase().match(badwordsRegExp)[0];
+          await message.delete();
+          console.log(`Deleted message from ${message.author.tag} in ${message.guild.name} due to word filtering.`);
 
-              const reportChannel = message.guild.channels.cache.get(reportChannelId);
-              if (reportChannel && reportChannel.isText()) {
-                await reportChannel.send({ embeds: [reportEmbed] });
-              }
+          // Send a report to the specified channel
+          const reportChannelId = guildData.reportChannelId;
+          if (reportChannelId) {
+            const reportEmbed = new EmbedBuilder()
+              .setTitle('Blacklist Words Report')
+              .setDescription(`Message deleted from <@${message.author.id}> in ${message.guild.name} for containing the word: ${word}`)
+              .setColor('Red')
+              .setTimestamp();
+
+            const reportChannel = message.guild.channels.cache.get(reportChannelId);
+            if (reportChannel) {
+              await reportChannel.send({ embeds: [reportEmbed] });
             }
-          } catch (error) {
-            console.error('Error deleting message:', error);
           }
+        } catch (error) {
+          console.error('Error deleting message:', error);
         }
       }
     }
@@ -184,14 +185,14 @@ client.on('messageCreate', async (message) => {
           // Send a report to the specified channel
           const reportChannelId = guildData.reportChannelId;
           if (reportChannelId) {
-            const reportEmbed = new MessageEmbed()
+            const reportEmbed = new EmbedBuilder()
               .setTitle('Spam Filtering Report')
               .setDescription(`Message deleted from <@${message.author.id}> in ${message.guild.name} for spamming.`)
-              .setColor('RED')
+              .setColor('Red')
               .setTimestamp();
 
             const reportChannel = message.guild.channels.cache.get(reportChannelId);
-            if (reportChannel && reportChannel.isText()) {
+            if (reportChannel) {
               await reportChannel.send({ embeds: [reportEmbed] });
             }
           }

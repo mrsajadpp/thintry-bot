@@ -1,12 +1,12 @@
 const { SlashCommandBuilder } = require('@discordjs/builders');
-const { MessageEmbed } = require('discord.js');
+const { EmbedBuilder, ChannelType, PermissionsBitField } = require('discord.js');
 
 module.exports = {
   async execute(interaction, db) {
     const reportChannelOption = interaction.options.getChannel('channel');
 
     // Check if the user is an administrator
-    if (interaction.member.permissions.has('ADMINISTRATOR')) {
+    if (interaction.member.permissions.has(PermissionsBitField.StageModerator)) {
       try {
         // Assuming there's a 'guildSettings' collection in the database
         const guildSettings = await db.collection('guildSettings').findOne({ guildId: interaction.guild.id });
@@ -23,23 +23,23 @@ module.exports = {
           } else {
             // If no report channel is set, create a new entry
             await db.collection('guildSettings').updateOne(
-              { guildId: interaction.guild.id },
+              { guildId: interaction.guild.id }, 
               updateFields,
               { upsert: true }
             );
           }
 
-          const embed = new MessageEmbed()
+          const embed = new EmbedBuilder()
             .setTitle('Report Channel Set')
             .setDescription(`Bad words deletion reports will now be sent to ${reportChannelOption}.`)
-            .setColor('GREEN');
+            .setColor('Green');
 
           await interaction.reply({ embeds: [embed] });
         } else {
-          const embed = new MessageEmbed()
+          const embed = new EmbedBuilder()
             .setTitle('Invalid Report Channel')
             .setDescription('Please provide a valid channel to set as the report channel.')
-            .setColor('RED');
+            .setColor('Red');
 
           await interaction.reply({ embeds: [embed], ephemeral: true });
         }
@@ -48,10 +48,10 @@ module.exports = {
         await interaction.reply('An error occurred while updating the database.');
       }
     } else {
-      const embed = new MessageEmbed()
+      const embed = new EmbedBuilder()
         .setTitle('Permission Denied')
         .setDescription('You do not have the necessary permissions to set the report channel.')
-        .setColor('RED');
+        .setColor('Red');
 
       await interaction.reply({ embeds: [embed], ephemeral: true });
     }
@@ -64,5 +64,6 @@ module.exports = {
       option.setName('channel')
         .setDescription('The channel to send automoderation reports to.')
         .setRequired(true)
+        .addChannelTypes(ChannelType.GuildText)
     ),
 };

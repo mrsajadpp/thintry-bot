@@ -1,12 +1,12 @@
 const { SlashCommandBuilder } = require('@discordjs/builders');
-const { MessageEmbed } = require('discord.js');
+const { EmbedBuilder, ChannelType, PermissionsBitField } = require('discord.js');
 
 module.exports = {
     async execute(interaction, db) {
         const channelOption = interaction.options.getChannel('channel');
 
         // Check if the user is an administrator
-        if (interaction.member.permissions.has('ADMINISTRATOR')) {
+        if (interaction.member.permissions.has(PermissionsBitField.StageModerator)) {
             try {
                 // Assuming there's a 'guildSettings' collection in the database
                 const guildSettings = await db.collection('guildSettings').findOne({ guildId: interaction.guild.id });
@@ -29,17 +29,17 @@ module.exports = {
                         );
                     }
 
-                    const embed = new MessageEmbed()
+                    const embed = new EmbedBuilder()
                         .setTitle('Link Channel Set')
                         .setDescription(`Automoderation reports will now be sent to ${channelOption}.`)
-                        .setColor('GREEN');
+                        .setColor('Green');
 
                     await interaction.reply({ embeds: [embed] });
                 } else {
-                    const embed = new MessageEmbed()
+                    const embed = new EmbedBuilder()
                         .setTitle('Invalid Channel')
                         .setDescription('Please provide a valid channel to set as the automoderation report channel.')
-                        .setColor('RED');
+                        .setColor('Red');
 
                     await interaction.reply({ embeds: [embed], ephemeral: true });
                 }
@@ -48,10 +48,10 @@ module.exports = {
                 await interaction.reply('An error occurred while updating the database.');
             }
         } else {
-            const embed = new MessageEmbed()
+            const embed = new EmbedBuilder()
                 .setTitle('Permission Denied')
                 .setDescription('You do not have the necessary permissions to set the automoderation report channel.')
-                .setColor('RED');
+                .setColor('Red');
 
             await interaction.reply({ embeds: [embed], ephemeral: true });
         }
@@ -64,5 +64,6 @@ module.exports = {
             option.setName('channel')
                 .setDescription('The channel where everyone can share links.')
                 .setRequired(true)
+                .addChannelTypes(ChannelType.GuildText)
         ),
 };

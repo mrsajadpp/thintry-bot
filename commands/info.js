@@ -1,5 +1,5 @@
 const { SlashCommandBuilder } = require('@discordjs/builders');
-const { MessageEmbed } = require('discord.js');
+const { EmbedBuilder } = require('discord.js');
 
 module.exports = {
   data: new SlashCommandBuilder()
@@ -7,7 +7,7 @@ module.exports = {
     .setDescription('Displays server information'),
 
   async execute(interaction) {
-    const embed = new MessageEmbed()
+    const embed = new EmbedBuilder()
       .setTitle('Server Information')
       .setThumbnail(interaction.guild.iconURL())
       .addFields(

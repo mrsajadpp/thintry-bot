@@ -1,5 +1,5 @@
 const { SlashCommandBuilder } = require('@discordjs/builders');
-const { MessageEmbed } = require('discord.js');
+const { EmbedBuilder } = require('discord.js');
 const axios = require('axios');
 
 module.exports = {
@@ -20,13 +20,13 @@ module.exports = {
       const weatherCode = weatherData.data.data.timelines[0].intervals[0].values.weatherCode;
 
       // Determine color based on temperature
-      let color = 'BLUE';
+      let color = 'Blue';
       if (temperature > 30) {
-        color = 'RED';
+        color = 'Red';
       } else if (temperature > 20) {
-        color = 'ORANGE';
+        color = 'Orange';
       } else if (temperature > 10) {
-        color = 'YELLOW';
+        color = 'Yellow';
       }
 
       // Determine weather type image based on weather code
@@ -51,7 +51,7 @@ module.exports = {
       }
 
       // Create and send embed with image
-      const embed = new MessageEmbed()
+      const embed = new EmbedBuilder()
         .setTitle(`Weather Information for ${location}`)
         .addField('Temperature', `${temperature}°C`, true)
         .addField('Humidity', `${humidity}%`, true)

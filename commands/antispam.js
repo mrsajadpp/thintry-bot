@@ -1,12 +1,12 @@
 const { SlashCommandBuilder } = require('@discordjs/builders');
-const { MessageEmbed } = require('discord.js');
+const { EmbedBuilder, PermissionsBitField } = require('discord.js');
 
 module.exports = {
     async execute(interaction, db) {
         const enableAntiSpam = interaction.options.getBoolean('enable');
 
         // Check if the user is an administrator
-        if (interaction.member.permissions.has('ADMINISTRATOR')) {
+        if (interaction.member.permissions.has(PermissionsBitField.StageModerator)) {
             try {
                 // Assuming there's a 'guildSettings' collection in the database
                 await db.collection('guildSettings').updateOne(
@@ -16,10 +16,10 @@ module.exports = {
                 );
 
                 const status = enableAntiSpam ? 'enabled' : 'disabled';
-                const embed = new MessageEmbed()
+                const embed = new EmbedBuilder()
                     .setTitle(`Anti-Spam Measures ${status}`)
                     .setDescription(`Anti-spam measures have been ${status} for this server.`)
-                    .setColor('GREEN');
+                    .setColor('Green');
 
                 await interaction.reply({ embeds: [embed] });
             } catch (error) {
@@ -27,10 +27,10 @@ module.exports = {
                 await interaction.reply('An error occurred while updating the database.');
             }
         } else {
-            const embed = new MessageEmbed()
+            const embed = new EmbedBuilder()
                 .setTitle('Permission Denied')
                 .setDescription('You do not have the necessary permissions to modify the anti-spam measures setting.')
-                .setColor('RED');
+                .setColor('Red');
 
             await interaction.reply({ embeds: [embed], ephemeral: true });
         }
