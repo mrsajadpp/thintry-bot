@@ -92,7 +92,6 @@ client.on('messageCreate', async (message) => {
   const guildData = await db.collection('guildSettings').findOne({ guildId: message.guild.id });
 
   if (guildData) {
-    console.log(guildData);
     const isAdmin = message.member.permissions.has(PermissionsBitField.StageModerator);
     const linkFilterEnabled = guildData.linkFilterEnabled;
     const blacklistWordsEnabled = guildData.blacklistWordsEnabled;
