@@ -2,7 +2,7 @@ require("dotenv").config();
 const fs = require('fs');
 const { REST } = require('@discordjs/rest');
 const { Routes } = require('discord-api-types/v9');
-const { Client, Intents, Collection, GatewayIntentBits, PermissionsBitField } = require('discord.js'); // Include Collection from discord.js
+const { Client, Intents, Collection, GatewayIntentBits, PermissionsBitField, ActivityType } = require('discord.js'); // Include Collection from discord.js
 const { connectToDatabase } = require('./database/db');
 
 const client = new Client({ intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMessages, GatewayIntentBits.DirectMessages, GatewayIntentBits.MessageContent, GatewayIntentBits.DirectMessageReactions, GatewayIntentBits.GuildEmojisAndStickers] });
@@ -28,8 +28,9 @@ for (const file of commandFiles) {
 
 client.once('ready', async () => {
   console.log(`${client.user.username} is ready!`);
-  client.user.setActivity("/help", {
-    type: "WATCHING"
+  client.user.setPresence({
+    activities: [{ name: `${client.guilds.cache.size} servers.`, type: ActivityType.Watching }],
+    status: 'online',
   });
   console.log('Guilds:');
   client.guilds.cache.forEach(guild => {
