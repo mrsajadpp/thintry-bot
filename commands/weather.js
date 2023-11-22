@@ -53,8 +53,13 @@ module.exports = {
       // Create and send embed with image
       const embed = new EmbedBuilder()
         .setTitle(`Weather Information for ${location}`)
-        .addField('Temperature', `${temperature}°C`, true)
-        .addField('Humidity', `${humidity}%`, true)
+        .addFields({
+          name: 'Temperature',
+          value: `${temperature}°C`
+        }, {
+          name: 'Humidity',
+          value: `${humidity}%`
+        })
         .setColor(color)
         .setThumbnail(weatherImage); // Directly use the URL here
 
@@ -74,4 +79,3 @@ module.exports = {
         .setRequired(true)
     ),
 };
- 

@@ -4,18 +4,25 @@ const fs = require('fs');
 
 module.exports = {
   async execute(interaction) {
-    const commands = getCommands();
-    
+    const commands = await getCommands();
+
+    const fields = commands.map(command => ({
+      name: `/${command.data.name}`,
+      value: command.data.description || 'No description available',
+    }));
     const embed = new EmbedBuilder()
       .setTitle('🛡️ Auto-Moderation Features')
       .setDescription(`Explore the powerful auto-moderation features crafted by ${interaction.client.user.username}. these functionalities are designed to elevate your Discord server experience.`)
-      .setFooter(`Please note that these features are specific to ${interaction.client.user.username}. Check the bot documentation for the most up-to-date information and customization options.`)
+      .setFooter({
+        text: `Please note that these features are specific to ${interaction.client.user.username}. Check the bot documentation for the most up-to-date information and customization options.`
+      })
       .setTimestamp()
       .setColor('Orange');
 
-      commands.forEach(command => {
-        embed.addField(`/${command.data.name}`, command.data.description || 'No description available');
-      });
+    // commands.forEach(command => {
+    //   embed.addField(`/${command.data.name}`, command.data.description || 'No description available');
+    // });
+    embed.addFields(fields);
 
     await interaction.reply({ embeds: [embed] });
   },

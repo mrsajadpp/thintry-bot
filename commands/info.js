@@ -19,7 +19,9 @@ module.exports = {
         { name: 'Region:', value: `${interaction.guild.region} : unavailable`, inline: true }
       )
       .setColor('#FFFF66')
-      .setFooter('Requested by ' + interaction.user.tag)
+      .setFooter({
+        text: 'Requested by ' + interaction.user.tag
+      })
       .setTimestamp();
 
     try {

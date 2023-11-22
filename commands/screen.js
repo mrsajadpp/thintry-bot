@@ -1,6 +1,6 @@
 const { SlashCommandBuilder } = require('@discordjs/builders');
 const puppeteer = require('puppeteer');
-const { MessageAttachment } = require('discord.js');
+const { AttachmentBuilder } = require('discord.js');
 const { createCanvas, loadImage } = require('canvas');
 var URL = require('url').URL;
 
@@ -39,6 +39,7 @@ module.exports = {
 
     try {
       const browser = await puppeteer.launch({
+        headless: "new",
         executablePath: '/usr/bin/google-chrome', // Replace with your Chrome executable path
       });
       const page = await browser.newPage();
@@ -69,7 +70,7 @@ module.exports = {
 
       await browser.close();
 
-      const attachment = new MessageAttachment(canvasBuffer, 'screenshot_with_watermark.png');
+      const attachment = new AttachmentBuilder(canvasBuffer, 'screenshot_with_watermark.png');
       await interaction.editReply({ files: [attachment] });
     } catch (error) {
       console.error('Error taking screenshot:', error);
