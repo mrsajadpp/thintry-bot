@@ -1,12 +1,12 @@
 {
-  "name": "Crawler",
+  "name": "Paper",
   "description": "Taking screenshot.",
   "keywords": [
     "Nodejs",
     "Aco",
-    "Crawler"
+    "Paper"
   ],
   "website": "https://github.com/mrsajadpp",
-  "repository": "https://github.com/mrsajadpp/crawler",
+  "repository": "https://github.com/mrsajadpp/paper",
   "logo": "https://i.postimg.cc/vBPkBfYH/images-1-6.png"
 }

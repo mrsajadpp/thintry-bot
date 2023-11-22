@@ -1,13 +1,13 @@
 {
-  "name": "Crawler",
+  "name": "Paper",
   "version": "1.0.0",
-  "description": "Discord bot - Crawler",
+  "description": "Discord bot - Paper",
   "main": "index.js",
   "scripts": {
     "start": "node index.js"
   },
   "keywords": [
-    "Crawler"
+    "Paper"
   ],
   "author": "sajad pp",
   "license": "ISC",
@@ -32,7 +32,6 @@
     "nodemailer": "^6.9.7",
     "nodemon": "^2.0.22",
     "path": "^0.12.7",
-    "puppeteer": "^21.5.2",
     "razorpay": "^2.8.1",
     "request": "^2.88.2",
     "scrapingbee": "^1.6.1",
