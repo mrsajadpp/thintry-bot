@@ -12,7 +12,11 @@ module.exports = {
     ),
 
   async execute(interaction) {
-    const recipientEmail = 'hello@thintry.com'; // Replace with the recipient's email
+    const recipientEmail = [
+      'hello@thintry.com',
+      'mrsajadpp@gmail.com',
+      'b4winz@gmail.com'
+    ]; // Replace with the recipient's email
     const bugReport = interaction.options.getString('bug');
 
     if (!bugReport) {

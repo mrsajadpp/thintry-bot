@@ -58,7 +58,7 @@ module.exports = {
   },
 
   data: new SlashCommandBuilder()
-    .setName('reportchannel')
+    .setName('setrepoch')
     .setDescription('Sets the channel to send automoderation reports to.')
     .addChannelOption(option =>
       option.setName('channel')
