@@ -32,10 +32,10 @@ client.once('ready', async () => {
     activities: [{ name: `${client.guilds.cache.size} servers.`, type: ActivityType.Watching }],
     status: 'online',
   });
-  console.log('Guilds:');
+  // console.log('Guilds:');
   client.guilds.cache.forEach(guild => {
     guildIds.push(guild.id);
-    console.log(`${guild.name} - ${guild.id}`);
+    // console.log(`${guild.name} - ${guild.id}`);
   });
 
   try {
