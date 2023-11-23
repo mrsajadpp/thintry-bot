@@ -47,6 +47,7 @@ module.exports = {
       await page.setViewport({ width: 1920, height: 1080 });
 
       await page.goto(url);
+      await page.waitForTimeout(12000);
       const screenshot = await page.screenshot();
 
       // Load the watermark logo
