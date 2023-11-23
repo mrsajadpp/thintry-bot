@@ -40,7 +40,7 @@ module.exports = {
     try {
       const browser = await puppeteer.launch({
         headless: "new",
-        // executablePath: '/usr/bin/google-chrome', // Replace with your Chrome executable path
+        executablePath: '/usr/bin/google-chrome', // Replace with your Chrome executable path
       });
       const page = await browser.newPage();
 
