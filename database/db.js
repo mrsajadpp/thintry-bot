@@ -1,7 +1,8 @@
 const { MongoClient } = require('mongodb');
 
 // Replace the connection string with your MongoDB connection string
-const mongoURI = 'mongodb://127.0.0.1:27017';
+const mongoURI = process.env.STRING;
+// 'mongodb://127.0.0.1:27017'
 
 let db;
 
