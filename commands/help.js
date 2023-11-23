@@ -14,7 +14,7 @@ module.exports = {
       .setTitle('🛡️ Auto-Moderation Features')
       .setDescription(`Explore the powerful auto-moderation features crafted by ${interaction.client.user.username}. these functionalities are designed to elevate your Discord server experience.`)
       .setFooter({
-        text: `Please note that these features are specific to ${interaction.client.user.username}. Check the bot documentation for the most up-to-date information and customization options.`
+        text: `Please note that these features are specific to ${interaction.client.user.username}. Check the bot documentation for the most up-to-date information and customization options, Big shoutout to <@875614654724968468> for being an amazing host and providing valuable support! 💖 Your assistance is truly appreciated.`
       })
       .setTimestamp()
       .setColor('Orange');
