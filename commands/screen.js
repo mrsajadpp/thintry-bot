@@ -63,7 +63,7 @@ module.exports = {
       const logoX = canvas.width - 700; // Adjust the x-coordinate as needed
       const logoY = (canvas.height - 60) / 2; // Centered along the y-axis
 
-      ctx.drawImage(logo, logoX, logoY, 150, 60);
+      ctx.drawImage(logo, logoX, logoY, 165, 60);
 
       // Convert the canvas to a Buffer
       const canvasBuffer = canvas.toBuffer('image/png');
