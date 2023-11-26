@@ -3,7 +3,11 @@ const fs = require('fs');
 const { REST } = require('@discordjs/rest');
 const { Routes } = require('discord-api-types/v9');
 const { Client, Intents, Collection, GatewayIntentBits, PermissionsBitField, ActivityType } = require('discord.js'); // Include Collection from discord.js
+const { EmbedBuilder } = require('discord.js');
 const { connectToDatabase } = require('./database/db');
+const express = require('express');
+const app = express();
+const mdl = require("./modules/module");
 
 const client = new Client({ intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMessages, GatewayIntentBits.DirectMessages, GatewayIntentBits.MessageContent, GatewayIntentBits.DirectMessageReactions, GatewayIntentBits.GuildEmojisAndStickers] });
 client.commands = new Collection(); // Create a new collection for commands
@@ -32,10 +36,12 @@ client.once('ready', async () => {
     activities: [{ name: `${client.guilds.cache.size} servers.`, type: ActivityType.Watching }],
     status: 'online',
   });
-  // console.log('Guilds:');
   client.guilds.cache.forEach(guild => {
     guildIds.push(guild.id);
-    // console.log(`${guild.name} - ${guild.id}`);
+  });
+
+  app.listen(80, () => {
+    console.log("🚀Web server started on port 80!");
   });
 
   try {
@@ -63,6 +69,11 @@ client.on('guildCreate', async guild => {
       Routes.applicationGuildCommands(client.user.id, guild.id), // Replace YOUR_CLIENT_ID with your bot's client ID
       { body: commands },
     );
+
+    client.user.setPresence({
+      activities: [{ name: `${client.guilds.cache.size} servers.`, type: ActivityType.Watching }],
+      status: 'online',
+    });
   } catch (error) {
     console.error('Error registering application (/) commands in new guild:', error);
   }
@@ -83,12 +94,14 @@ client.on('interactionCreate', async interaction => {
   }
 });
 
-const { EmbedBuilder } = require('discord.js');
-
 // Assuming you have a cooldowns Map
 const cooldowns = new Map();
 
 client.on('messageCreate', async (message) => {
+  client.user.setPresence({
+    activities: [{ name: `${client.guilds.cache.size} servers.`, type: ActivityType.Watching }],
+    status: 'online',
+  });
   // Check if the guild has auto-moderation features enabled
   const guildData = await db.collection('guildSettings').findOne({ guildId: message.guild.id });
 
@@ -101,115 +114,34 @@ client.on('messageCreate', async (message) => {
 
     // Check for link filtering
     if (linkFilterEnabled && !isAdmin && containsLink(message.content) && linkChannelId !== message.channelId) {
-      try {
-        await message.delete();
-        console.log(`Deleted message from ${message.author.tag} in ${message.guild.name} due to link filtering.`);
-
-        // Send a report to the specified channel
-        const reportChannelId = guildData.reportChannelId;
-        if (reportChannelId) {
-          const reportEmbed = new EmbedBuilder()
-            .setTitle('Link Filtering Report')
-            .setDescription(`Message deleted from <@${message.author.id}> in ${message.guild.name} for containing an unauthorized link.`)
-            .setColor('Red')
-            .setTimestamp();
-
-          const reportChannel = message.guild.channels.cache.get(reportChannelId);
-          if (reportChannel) {
-            await reportChannel.send({ embeds: [reportEmbed] });
-          }
-        }
-      } catch (error) {
-        console.error('Error deleting message:', error);
-      }
+      mdl.linkFltr(db, message, guildData);
     }
 
     // Check for word filtering
     if (blacklistWordsEnabled) {
       var badwordsRegExp = require('badwords/regexp');
-
-
       if (message.content.toLowerCase().match(badwordsRegExp)) {
         // Delete the message if it contains a filtered word
-        try {
-          const word = message.content.toLowerCase().match(badwordsRegExp)[0];
-          await message.delete();
-          console.log(`Deleted message from ${message.author.tag} in ${message.guild.name} due to word filtering.`);
-
-          // Send a report to the specified channel
-          const reportChannelId = guildData.reportChannelId;
-          if (reportChannelId) {
-            const reportEmbed = new EmbedBuilder()
-              .setTitle('Blacklist Words Report')
-              .setDescription(`Message deleted from <@${message.author.id}> in ${message.guild.name} for containing the word: ${word}`)
-              .setColor('Red')
-              .setTimestamp();
-
-            const reportChannel = message.guild.channels.cache.get(reportChannelId);
-            if (reportChannel) {
-              await reportChannel.send({ embeds: [reportEmbed] });
-            }
-          }
-        } catch (error) {
-          console.error('Error deleting message:', error);
-        }
+        mdl.delBlack(db, message, guildData, badwordsRegExp);
       }
     }
 
     // Check for spam messages
-    if (antiSpamEnabled && !isAdmin) {
-      const cooldownTime = 5000; // 5 seconds cooldown (adjust as needed)
-      const userCooldownKey = `${message.guild.id}-${message.author.id}`;
-
-      // Fetch user cooldown from the database
-      const userCooldownData = await db.collection('userCooldowns').findOne({ key: userCooldownKey });
-      const userCooldown = userCooldownData ? userCooldownData.timestamp : 0;
-
-      if (Date.now() - userCooldown > cooldownTime) {
-        // Allow the message
-        try {
-          // Update user cooldown in the database
-          await db.collection('userCooldowns').updateOne(
-            { key: userCooldownKey },
-            { $set: { timestamp: Date.now() } },
-            { upsert: true }
-          );
-        } catch (error) {
-          console.error('Error updating user cooldown in the database:', error);
-        }
-      } else {
-        // Delete the spam message
-        try {
-          await message.delete();
-
-          // Send a report to the specified channel
-          const reportChannelId = guildData.reportChannelId;
-          if (reportChannelId) {
-            const reportEmbed = new EmbedBuilder()
-              .setTitle('Spam Filtering Report')
-              .setDescription(`Message deleted from <@${message.author.id}> in ${message.guild.name} for spamming.`)
-              .setColor('Red')
-              .setTimestamp();
-
-            const reportChannel = message.guild.channels.cache.get(reportChannelId);
-            if (reportChannel) {
-              await reportChannel.send({ embeds: [reportEmbed] });
-            }
-          }
-        } catch (error) {
-          console.error('Error deleting spam message:', error);
-        }
-      }
+    if (antiSpamEnabled) {
+      mdl.protSpam(db, message, guildData);
     }
   }
 });
-
 
 function containsLink(content) {
   // Use a regular expression to check if the message contains a URL
   const urlRegex = /(?:https?:\/\/)?(?:www\.)?[a-zA-Z0-9-]+\.[a-zA-Z]{2,}(?:\/[^\s]*)?/;
   return urlRegex.test(content);
 }
+
+app.get('/', (req, res) => {
+  res.send("www.thintry.com");
+})
 
 
 process.on("unhandledRejection", error => console.error("Promise rejection:", error));
