@@ -7,7 +7,7 @@ function containsLink(content) {
 }
 
 module.exports = {
-    protSpam: async (db, message) => {
+    protSpam: async (db, message, guildData) => {
         const cooldownTime = 5000; // 5 seconds cooldown (adjust as needed)
         const userCooldownKey = `${message.guild.id}-${message.author.id}`;
 

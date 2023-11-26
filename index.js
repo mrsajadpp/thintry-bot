@@ -16,6 +16,7 @@ let commands = [];
 let guildIds = []; // Renamed from guild_id for better readability
 
 let db;
+let activytyStatus = false;
 
 (async () => {
   db = await connectToDatabase('paper');
@@ -78,6 +79,22 @@ client.on('guildCreate', async guild => {
     console.error('Error registering application (/) commands in new guild:', error);
   }
 });
+
+setInterval(() => {
+  if (activytyStatus) {
+    client.user.setPresence({
+      activities: [{ name: `/help`, type: ActivityType.Watching }],
+      status: 'online',
+    });
+    activytyStatus = false;
+  } else {
+    client.user.setPresence({
+      activities: [{ name: `${client.guilds.cache.size} servers.`, type: ActivityType.Watching }],
+      status: 'online',
+    });
+    activytyStatus = true;
+  }
+}, 5000);
 
 
 client.on('interactionCreate', async interaction => {
